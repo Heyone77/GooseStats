@@ -1,4 +1,6 @@
+
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -15,8 +17,9 @@ import kotlinx.coroutines.withContext
 
 class MyViewModel(application: Application) : AndroidViewModel(application) {
     private val appContext = getApplication<Application>().applicationContext
-    private val _rolesData = MutableLiveData<List<Pair<Int, Int>>>()
-    val rolesData: LiveData<List<Pair<Int, Int>>> = _rolesData
+
+    private val _userData = MutableLiveData<List<Pair<Int, Int>>>()
+    val userData: LiveData<List<Pair<Int, Int>>> = _userData
 
 
     fun handleImageClick(imageResId: Int) {
@@ -38,12 +41,18 @@ class MyViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun getUserData(username: String) {
+    fun loadUserData(username: String) {
         viewModelScope.launch {
-            val data = withContext(Dispatchers.IO) {
-                fetchUserData(username)
+            try {
+                val jsonString = withContext(Dispatchers.IO){fetchUserData(username)}
+                val roles = parseJson(jsonString)
+                _userData.value = processRoles(roles)
+                Log.i("info", "Сервер")
+            } catch (e: Exception) {
+                Log.i("info",e.toString())
             }
-            _rolesData.postValue(processRoles(parseJson(data)))
         }
     }
 }
+
+

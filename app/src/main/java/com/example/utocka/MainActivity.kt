@@ -1,8 +1,10 @@
 package com.example.utocka
 
+import MyViewModel
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
@@ -33,6 +34,7 @@ class MainActivity : ComponentActivity() {
 
 
         setContent {
+            val myViewModel: MyViewModel by viewModels()
             UtockaTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
@@ -43,6 +45,12 @@ class MainActivity : ComponentActivity() {
                     }
                     val pagerState = rememberPagerState {
                         tabItems.size
+                    }
+
+                    LaunchedEffect(key1 = selectedTabIndex) {
+                        if (selectedTabIndex == 1) {
+                            myViewModel.loadUserData("hey")
+                        }
                     }
 
                     LaunchedEffect(selectedTabIndex) {
@@ -61,12 +69,12 @@ class MainActivity : ComponentActivity() {
                                     onClick = { selectedTabIndex = index },
                                     text = { Text(text = item.title) },
                                     icon = {
-                                        Icon(
-                                            imageVector = if (index == selectedTabIndex) {
-                                                item.selectedIcon
-                                            } else item.unselectedIcon,
-                                            contentDescription = item.title
-                                        )
+//                                        Icon(
+//                                            imageVector = if (index == selectedTabIndex) {
+//                                                item.selectedIcon
+//                                            } else item.unselectedIcon,
+//                                            contentDescription = item.title
+//                                        )
                                     })
                             }
                         }
@@ -82,8 +90,7 @@ class MainActivity : ComponentActivity() {
                                 if (pagerState.currentPage == 0) {
                                     VerticalGrid(imageResourceList)
                                 } else {
-
-
+                                    ColumnWithData(myViewModel)
                                 }
                             }
                         }

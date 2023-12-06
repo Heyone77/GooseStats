@@ -9,10 +9,14 @@ fun ConfirmationDialog(
     onDismissRequest: () -> Unit,
     onConfirmation: () -> Unit,
     dialogTitle: String = "Подтверждение",
+    dialogText:String
 ) {
     AlertDialog(
         title = {
             Text(text = dialogTitle)
+        },
+        text = {
+            Text(text = dialogText)
         },
         onDismissRequest = onDismissRequest,
         confirmButton = {

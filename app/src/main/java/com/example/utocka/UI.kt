@@ -13,6 +13,13 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Create
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -35,24 +42,20 @@ fun ImageForSending(imageResId: Int, onImageClick: (Int) -> Unit) {
     var showDialog by remember { mutableStateOf(false) }
 
     if (showDialog) {
-        ConfirmationDialog(
-            onDismissRequest = { showDialog = false },
-            onConfirmation = {
-                onImageClick(imageResId)
-                showDialog = false
-            }
+        ConfirmationDialog(onDismissRequest = { showDialog = false }, onConfirmation = {
+            onImageClick(imageResId)
+            showDialog = false
+        }, dialogText = "Вам точно выпала эта роль?"
         )
     }
 
-    Image(
-        painter = painterResource(id = imageResId),
+    Image(painter = painterResource(id = imageResId),
         contentDescription = null,
         contentScale = ContentScale.Crop,
         modifier = Modifier
             .clickable { showDialog = true }
             .padding(5.dp)
-            .clip(shape = RoundedCornerShape(12.dp))
-    )
+            .clip(shape = RoundedCornerShape(12.dp)))
 }
 
 @Composable
@@ -78,8 +81,7 @@ fun ColumnElement(imageResId: Int, count: Int) {
                 .clip(shape = RoundedCornerShape(12.dp))
         )
         Text(
-            text = "Выпадений: $count",
-            fontSize = 30.sp
+            text = "Выпадений: $count", fontSize = 30.sp
         )
     }
 }
@@ -95,7 +97,38 @@ fun ColumnWithData(viewModel: MyViewModel) {
     }
 }
 
+@Composable
+fun CustomTabRow(selectedTabIndex: Int, tabItems: List<TabItem>, onTabSelected: (Int) -> Unit) {
+    TabRow(selectedTabIndex = selectedTabIndex) {
+        tabItems.forEachIndexed { index, item ->
+            Tab(
+                selected = index == selectedTabIndex,
+                onClick = { onTabSelected(index) },
+                text = { Text(text = item.title) },
+//                icon = {
+//                    Icon(
+//                        imageVector = if (index == selectedTabIndex) {
+//                            item.selectedIcon
+//                        } else item.unselectedIcon,
+//                        contentDescription = item.title
+//                    )
+//                }
+            )
+        }
+    }
+}
 
+@Composable
+fun BottomAppBarContent(modifier: Modifier, text:String) {
+    BottomAppBar(modifier = modifier
+    ) {
+        IconButton(onClick = {
+            // Обработка нажатия на кнопку
+        }
 
-
-
+        ) {
+            Icon(imageVector = Icons.Default.Create, contentDescription = null)
+        }
+        Text(text = text)
+    }
+}

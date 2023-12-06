@@ -13,11 +13,11 @@ data class TabItem(
 
 val tabItems = listOf(
     TabItem(
-        title = "Отправка",
+        title = "Отправка данных",
         unselectedIcon = Icons.Outlined.ArrowUpward,
         selectedIcon = Icons.Filled.ArrowUpward
     ), TabItem(
-        title = "Получить",
+        title = "Статистика",
         unselectedIcon = Icons.Outlined.ArrowDownward,
         selectedIcon = Icons.Filled.ArrowDownward
     )

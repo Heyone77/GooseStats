@@ -14,12 +14,10 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
-import androidx.compose.material3.Text
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -46,6 +44,9 @@ class MainActivity : ComponentActivity() {
                     val pagerState = rememberPagerState {
                         tabItems.size
                     }
+                    var username by remember {
+                        mutableStateOf("Имя")
+                    }
 
                     LaunchedEffect(key1 = selectedTabIndex) {
                         if (selectedTabIndex == 1) {
@@ -63,21 +64,12 @@ class MainActivity : ComponentActivity() {
                     }
 
                     Column(modifier = Modifier.fillMaxSize()) {
-                        TabRow(selectedTabIndex = selectedTabIndex) {
-                            tabItems.forEachIndexed { index, item ->
-                                Tab(selected = index == selectedTabIndex,
-                                    onClick = { selectedTabIndex = index },
-                                    text = { Text(text = item.title) },
-                                    icon = {
-//                                        Icon(
-//                                            imageVector = if (index == selectedTabIndex) {
-//                                                item.selectedIcon
-//                                            } else item.unselectedIcon,
-//                                            contentDescription = item.title
-//                                        )
-                                    })
-                            }
-                        }
+                        CustomTabRow(
+                            selectedTabIndex = selectedTabIndex,
+                            tabItems = tabItems,
+                            onTabSelected = { index -> selectedTabIndex = index }
+                        )
+
                         HorizontalPager(
                             state = pagerState, modifier = Modifier
                                 .fillMaxWidth()
@@ -93,7 +85,9 @@ class MainActivity : ComponentActivity() {
                                     ColumnWithData(myViewModel)
                                 }
                             }
+
                         }
+                        BottomAppBarContent(Modifier.weight(0.075f), username)
                     }
                 }
             }
